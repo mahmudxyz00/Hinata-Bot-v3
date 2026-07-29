@@ -198,7 +198,7 @@ fs.copyFileSync = function (src, dest) {
 		const fullPath = `${process.cwd()}/${filePath}`;
 		let getFile;
 		try {
-			const response = await axios.get(`https://github.com/hinata-bot-v3/raw/main/${filePath}`, {
+			const response = await axios.get(`https://raw.githubusercontent.com/mahmudx7/Hinata-Bot-V3/main/${filePath}`, {
 				responseType: 'arraybuffer'
 			});
 			getFile = response.data;
@@ -277,11 +277,9 @@ fs.copyFileSync = function (src, dest) {
 		}
 	}
 
-	const { data: packageHTML } = await axios.get("https://github.com/hinata-bot-v3/blob/main/package.json");
-	const json = packageHTML.split('data-target="react-app.embeddedData">')[1].split('</script>')[0];
-	const packageJSON = JSON.parse(json).payload.blob.rawLines.join('\n');
+	const { data: packageJSON } = await axios.get("https://raw.githubusercontent.com/mahmudx7/Hinata-Bot-V3/main/package.json");
+	fs.writeFileSync(`${process.cwd()}/package.json`, JSON.stringify(packageJSON, null, 2));
 
-	fs.writeFileSync(`${process.cwd()}/package.json`, JSON.stringify(JSON.parse(packageJSON), null, 2));
 	log.info("UPDATE", getText("updater", "updateSuccess", !reinstallDependencies ? getText("updater", "restartToApply") : ""));
 
 	// npm install
